@@ -1,0 +1,23 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "Essence Mascara Lash Princess",
+      "price": 9.99,
+      "stock": 5,
+      "category": "beauty",
+      "images": ["https://cdn.dummyjson.com/products/images/beauty/Essence%20Mascara%20Lash%20Princess/1.png"]
+    },
+    {
+      "id": 2,
+      "title": "Eyeshadow Palette with Mirror",
+      "price": 19.99,
+      "stock": 10,
+      "category": "beauty",
+      "images": ["https://cdn.dummyjson.com/products/images/beauty/Eyeshadow%20Palette%20with%20Mirror/1.png"]
+    }
+  ],
+  "total": 2,
+  "skip": 0,
+  "limit": 10
+}
