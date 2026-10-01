@@ -36,6 +36,7 @@ export default function ProductForm({
           title: "",
           price: undefined,
           stock: undefined,
+          category: "" as any,
           thumbnail: "",
         },
   });

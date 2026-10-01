@@ -1,4 +1,5 @@
 import { z } from "zod";
+import fallbackData from "@/data/products-fallback.json";
 
 export const CATEGORIES = [
   "beauty", "fragrances", "furniture", "groceries",
@@ -66,15 +67,29 @@ export function buildProductUrl(query: SearchQuery): string {
   return `${API_BASE}/products/search?${params.toString()}`;
 }
 
-export async function fetchProducts(query: SearchQuery): Promise<ProductList> {
-  const response = await fetch(buildProductUrl(query));
-  if (!response.ok) {
-    throw new Error(`เรียกข้อมูลไม่สำเร็จ สถานะ ${response.status}`);
+export async function fetchProducts(
+  query: SearchQuery,
+  useFallbackOnFail: boolean = true
+): Promise<ProductList> {
+  try {
+    const response = await fetch(buildProductUrl(query));
+    if (!response.ok) {
+      throw new Error(`เรียกข้อมูลไม่สำเร็จ สถานะ ${response.status}`);
+    }
+    const data = await response.json();
+    const result = ProductListSchema.safeParse(data);
+    if (!result.success) {
+      throw new Error("รูปแบบข้อมูลที่ได้รับไม่ตรงกับที่กำหนดไว้");
+    }
+    return result.data;
+  } catch (error) {
+    // หากเรียกไม่สำเร็จ และอนุญาตให้ใช้ Fallback ข้อมูลสำรอง
+    if (useFallbackOnFail) {
+      const parsedFallback = ProductListSchema.safeParse(fallbackData);
+      if (parsedFallback.success) {
+        return parsedFallback.data;
+      }
+    }
+    throw error;
   }
-  const data = await response.json();
-  const result = ProductListSchema.safeParse(data);
-  if (!result.success) {
-    throw new Error("รูปแบบข้อมูลที่ได้รับไม่ตรงกับที่กำหนดไว้");
-  }
-  return result.data;
 }
